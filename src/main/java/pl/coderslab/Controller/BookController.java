@@ -5,8 +5,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import pl.coderslab.Dao.AuthorDao;
 import pl.coderslab.Dao.BookDao;
+import pl.coderslab.Dao.PublisherDao;
 import pl.coderslab.Entity.Book;
+import pl.coderslab.Entity.Publisher;
 
 import java.util.Random;
 
@@ -15,6 +18,12 @@ public class BookController
 {
     @Autowired
     private BookDao bookDao;
+
+    @Autowired
+    private PublisherDao publisherDao;
+
+    @Autowired
+    private AuthorDao authorDao;
 
     @RequestMapping("/books/{id}")
     @ResponseBody
@@ -38,10 +47,10 @@ public class BookController
     {
         Random generator = new Random();
 
-        Book book = new Book();
+               Book book = new Book();
         book.setTitle("Nowa ksiaza" + generator.nextInt(100000) + 1);
-        book.setAuthor("Autor nowy");
-        book.setPublisher("Nowe wydawnictwo");
+        book.setAuthors(authorDao.findById(1L));
+        book.setPublisher(publisherDao.findById(1L));
         book.setDescription("Super ksiazka");
         book.setRating(5.5);
 

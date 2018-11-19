@@ -1,6 +1,7 @@
 package pl.coderslab.Entity;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "authors")
@@ -13,6 +14,8 @@ public class Author
     private String firstName;
     @Column(name = "last_name", nullable = false)
     private String lastName;
+    @ManyToMany(mappedBy = "authors")
+    private List<Book> books;
 
     public Author()
     {
@@ -46,6 +49,16 @@ public class Author
     public void setLastName(String lastName)
     {
         this.lastName = lastName;
+    }
+
+    public List<Book> getBooks()
+    {
+        return books;
+    }
+
+    public void setBooks(List<Book> books)
+    {
+        this.books = books;
     }
 
     @Override

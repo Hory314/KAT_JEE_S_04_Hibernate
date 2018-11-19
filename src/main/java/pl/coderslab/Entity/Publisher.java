@@ -1,15 +1,18 @@
 package pl.coderslab.Entity;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
-@Table(name = "publisher")
+@Table(name = "publishers")
 public class Publisher
 {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
+    @OneToMany(mappedBy = "publisher")
+    private List<Book> books;
 
     public Publisher()
     {
@@ -33,6 +36,16 @@ public class Publisher
     public void setName(String name)
     {
         this.name = name;
+    }
+
+    public List<Book> getBooks()
+    {
+        return books;
+    }
+
+    public void setBooks(List<Book> books)
+    {
+        this.books = books;
     }
 
     @Override
