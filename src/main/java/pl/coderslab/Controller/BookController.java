@@ -2,15 +2,18 @@ package pl.coderslab.Controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
 import pl.coderslab.Dao.AuthorDao;
 import pl.coderslab.Dao.BookDao;
 import pl.coderslab.Dao.PublisherDao;
+import pl.coderslab.Entity.Author;
 import pl.coderslab.Entity.Book;
 import pl.coderslab.Entity.Publisher;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 import java.util.Random;
 
 @Controller
@@ -25,6 +28,45 @@ public class BookController
     @Autowired
     private AuthorDao authorDao;
 
+    @GetMapping("/books")
+    public String listOfBooks(Model model)
+    {
+        model.addAttribute("books", bookDao.findAll());
+        return "/books/all";
+    }
+
+    @GetMapping("/books/create") // dzien2/czesc2
+    public String book(HttpServletRequest request)
+    {
+        request.setAttribute("newBook", new Book());
+        return "/books/create";
+    }
+
+    @ModelAttribute("publishers")
+    public List<Publisher> publishers()
+    {
+        return publisherDao.findAll();
+    }
+
+    @ModelAttribute("authors")
+    public List<Author> authors()
+    {
+        return authorDao.findAll();
+    }
+
+    @PostMapping("/books/create")
+    public String saveBook(Book book)
+    {
+        System.out.println(book.toString());
+
+        bookDao.saveBook(book);
+        System.out.println("id: " + book.getId());
+
+        // return "redirect:/books/" + book.getId();
+        return "redirect:/books";
+    }
+
+
     @RequestMapping("/books/{id}")
     @ResponseBody
     public String getById(@PathVariable Long id)
@@ -33,12 +75,18 @@ public class BookController
     }
 
     @RequestMapping("/books/delete/{id}")
-    @ResponseBody
     public String delete(@PathVariable Long id)
     {
         Book bookToDel = bookDao.findById(id);
         bookDao.delete(bookToDel);
-        return "Usunięto:\n" + bookToDel.toString();
+        return "redirect:/books";
+    }
+
+    @RequestMapping("/books/delete/confirm/{id}")
+    public String deleteConfirm(@PathVariable Long id, Model model)
+    {
+        model.addAttribute("id", id);
+        return "/books/del-confirm";
     }
 
     @RequestMapping("/books/add")
@@ -47,9 +95,9 @@ public class BookController
     {
         Random generator = new Random();
 
-               Book book = new Book();
+        Book book = new Book();
         book.setTitle("Nowa ksiaza" + generator.nextInt(100000) + 1);
-        book.setAuthors(authorDao.findById(1L));
+        //book.setAuthors(authorDao.findById(1L));
         book.setPublisher(publisherDao.findById(1L));
         book.setDescription("Super ksiazka");
         book.setRating(5.5);
@@ -58,17 +106,17 @@ public class BookController
         return "Dodano:\n" + book.toString();
     }
 
-    @RequestMapping("/books/edit/{id}")
-    @ResponseBody
-    public String update(@PathVariable Long id)
+    @GetMapping("/books/edit/{id}")
+    public String update(@PathVariable Long id, Model model)
     {
-        Random generator = new Random();
-        Book book = bookDao.findById(id);
-        book.setTitle("Zmieniony tytuł" + generator.nextInt(10000) + 1);
-        book.setRating(1.0);
-        book.setDescription("Jedanak słaba...");
-        bookDao.updateBook(book);
+        model.addAttribute("newBook", bookDao.findById(id));
+        return "/books/create";
+    }
 
-        return bookDao.findById(id).toString();
+    @PostMapping("/books/edit/{id}")
+    public String postUpdate(@ModelAttribute Book book)
+    {
+        bookDao.updateBook(book);
+        return "redirect:/books";
     }
 }

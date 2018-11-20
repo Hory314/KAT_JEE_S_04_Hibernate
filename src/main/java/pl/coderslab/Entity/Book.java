@@ -12,7 +12,7 @@ public class Book
     private Long id;
     @Column(nullable = false, unique = true)
     private String title;
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     private List<Author> authors;
     @ManyToOne
     private Publisher publisher;
@@ -50,9 +50,9 @@ public class Book
         return authors;
     }
 
-    public void setAuthors(Author author)
+    public void setAuthors(List<Author> authors)
     {
-        this.authors.add(author);
+        this.authors = authors;
     }
 
     public Publisher getPublisher()

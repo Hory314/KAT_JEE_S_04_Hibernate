@@ -21,6 +21,11 @@ public class Author
     {
     }
 
+    public String getFullName()
+    {
+        return this.firstName + " " + this.lastName;
+    }
+
     public Long getId()
     {
         return id;

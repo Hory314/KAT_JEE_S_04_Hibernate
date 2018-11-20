@@ -3,6 +3,8 @@ package pl.coderslab.Config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.convert.converter.Converter;
+import org.springframework.format.FormatterRegistry;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalEntityManagerFactoryBean;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
@@ -11,6 +13,8 @@ import org.springframework.web.servlet.config.annotation.DefaultServletHandlerCo
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
+import pl.coderslab.Converters.AuthorConverter;
+import pl.coderslab.Converters.PublisherConverter;
 
 import javax.persistence.EntityManagerFactory;
 
@@ -24,6 +28,13 @@ public class AppConfig extends WebMvcConfigurerAdapter
     public void configureDefaultServletHandling(DefaultServletHandlerConfigurer configurer)
     { // omija statyczne pliki
         configurer.enable();
+    }
+
+    @Override
+    public void addFormatters(FormatterRegistry registry)
+    {
+        registry.addConverter(puslisherConverter());
+        registry.addConverter(authorConverter());
     }
 
     @Bean
@@ -47,5 +58,17 @@ public class AppConfig extends WebMvcConfigurerAdapter
     public JpaTransactionManager transactionManager(EntityManagerFactory emf)
     {
         return new JpaTransactionManager(emf);
+    }
+
+    @Bean
+    public Converter puslisherConverter()
+    {
+        return new PublisherConverter();
+    }
+
+    @Bean
+    public Converter authorConverter()
+    {
+        return new AuthorConverter();
     }
 }
