@@ -13,8 +13,15 @@ public class PublisherConverter implements Converter<String, Publisher>
     @Override
     public Publisher convert(String s)
     {
-        Long id = Long.parseLong(s);
-        Publisher publisher = publisherDao.findById(id);
-        return publisher;
+        try
+        {
+            Long id = Long.parseLong(s);
+            Publisher publisher = publisherDao.findById(id);
+            return publisher;
+        }
+        catch (Exception e)
+        {
+            return null;
+        }
     }
 }

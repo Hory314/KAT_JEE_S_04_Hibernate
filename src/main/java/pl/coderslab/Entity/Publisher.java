@@ -1,11 +1,13 @@
 package pl.coderslab.Entity;
 
+import org.hibernate.validator.constraints.NotEmpty;
 import org.hibernate.validator.constraints.pl.NIP;
 import org.hibernate.validator.constraints.pl.REGON;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "publishers")
@@ -14,13 +16,13 @@ public class Publisher
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @NotNull
+    @NotNull @NotEmpty
     private String name;
     @OneToMany(mappedBy = "publisher")
     private List<Book> books;
-    @NIP
+    //@NIP
     private String nip;
-    @REGON
+    //@REGON
     private String regon;
 
     public Publisher()
@@ -78,14 +80,25 @@ public class Publisher
     }
 
     @Override
+    public boolean equals(Object o)
+    {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Publisher publisher = (Publisher) o;
+        return Objects.equals(id, publisher.id);
+    }
+
+    @Override
+    public int hashCode()
+    {
+        return Objects.hash(id);
+    }
+
+    @Override
     public String toString()
     {
         return "Publisher{" +
                 "id=" + id +
-                ", name='" + name + '\'' +
-                ", books=" + books +
-                ", nip='" + nip + '\'' +
-                ", regon='" + regon + '\'' +
                 '}';
     }
 }

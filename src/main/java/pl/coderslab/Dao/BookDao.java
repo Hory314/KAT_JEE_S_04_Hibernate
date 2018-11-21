@@ -50,4 +50,10 @@ public class BookDao
 
     }
 
+    public List<Book> findAllPropositions()
+    {
+        Query query = entityManager.createQuery("SELECT b FROM Book b WHERE proposition = ?1");
+        query.setParameter(1,true); // o: 1 = true (w bazie tinyint)
+        return query.getResultList();
+    }
 }

@@ -69,14 +69,4 @@ public class Person
         this.personDetails = personDetails;
     }
 
-    @Override
-    public String toString()
-    {
-        return "Person{" +
-                "id=" + id +
-                ", login='" + login + '\'' +
-                ", password='" + password + '\'' +
-                ", email='" + email + '\'' +
-                '}';
-    }
 }

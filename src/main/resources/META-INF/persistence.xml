@@ -13,7 +13,7 @@
             <!--<property name="javax.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver"/>-->
             <property name="javax.persistence.schema-generation.database.action" value="none"/> <!-- none lub drop-and-create -->
             <!--<property name="hibernate.hbm2ddl.auto" value="none"/>--> <!-- to co wyzej, wiec to lepiej zakomentowac -->
-            <property name="hibernate.show_sql" value="true"/> <!-- todo :: set false after testing -->
+            <property name="hibernate.show_sql" value="false"/> <!-- todo :: set false after testing -->
             <property name="hibernate.format_sql" value="true"/> <!-- todo :: set false after testing -->
             <!--<property name="javax.persistence.sql-load-script-source" value="META-INF/sql/data.sql"/>--> <!-- skryp startowy -->
             <property name="hibernate.dialect" value="org.hibernate.dialect.MySQL57Dialect"/>

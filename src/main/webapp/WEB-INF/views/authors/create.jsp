@@ -7,10 +7,14 @@
 </head>
 <body>
 <form:form method="post" modelAttribute="newAuthor">
+    <div style="color: red;">
+        <form:errors path="*"/>
+    </div>
     <form:input path="firstName" placeholder="Podaj imię"/>
     <form:input path="lastName" placeholder="Podaj nazwisko"/>
     <form:input path="pesel" placeholder="Podaj PESEL"/>
     <form:input path="email" placeholder="Podaj E-mail"/>
+    <form:input path="yearOfBirth" placeholder="Podaj rok urodzenia"/>
     <input type="submit">
 </form:form>
 </body>

@@ -7,6 +7,9 @@
 </head>
 <body>
 <form:form method="post" modelAttribute="newPublisher">
+    <div style="color: red;">
+        <form:errors path="*"/>
+    </div>
     <form:input path="name" placeholder="Podaj nazwę"/>
     <form:input path="nip" placeholder="Podaj NIP"/>
     <form:input path="regon" placeholder="Podaj REGON"/>

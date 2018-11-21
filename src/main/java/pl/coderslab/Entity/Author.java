@@ -1,11 +1,14 @@
 package pl.coderslab.Entity;
 
 import org.hibernate.validator.constraints.Email;
+import org.hibernate.validator.constraints.NotEmpty;
 import org.hibernate.validator.constraints.pl.PESEL;
+import pl.coderslab.Validation.Mature;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "authors")
@@ -16,32 +19,25 @@ public class Author
     private Long id;
     @Column(name = "first_name", nullable = false)
     @NotNull
+    @NotEmpty
     private String firstName;
     @Column(name = "last_name", nullable = false)
     @NotNull
+    @NotEmpty
     private String lastName;
     @ManyToMany(mappedBy = "authors")
     private List<Book> books;
-    @PESEL
+    //@PESEL
     private String pesel;
-    @Email
+    //@Email
     private String email;
+    @Column(name = "year_of_birth")
+    @Mature
+    private Integer yearOfBirth;
 
-    public Author()
+    public String getFullName()
     {
-    }
-
-    @Override
-    public String toString()
-    {
-        return "Author{" +
-                "id=" + id +
-                ", firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                ", books=" + books +
-                ", pesel='" + pesel + '\'' +
-                ", email='" + email + '\'' +
-                '}';
+        return this.firstName + " " + this.lastName;
     }
 
     public Long getId()
@@ -102,5 +98,38 @@ public class Author
     public void setEmail(String email)
     {
         this.email = email;
+    }
+
+    public Integer getYearOfBirth()
+    {
+        return yearOfBirth;
+    }
+
+    public void setYearOfBirth(Integer yearOfBirth)
+    {
+        this.yearOfBirth = yearOfBirth;
+    }
+
+    @Override
+    public boolean equals(Object o)
+    {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Author author = (Author) o;
+        return Objects.equals(id, author.id);
+    }
+
+    @Override
+    public String toString()
+    {
+        return "Author{" +
+                "id=" + id +
+                '}';
+    }
+
+    @Override
+    public int hashCode()
+    {
+        return Objects.hash(id);
     }
 }

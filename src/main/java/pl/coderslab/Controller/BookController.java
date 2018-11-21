@@ -3,6 +3,8 @@ package pl.coderslab.Controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import pl.coderslab.Dao.AuthorDao;
 import pl.coderslab.Dao.BookDao;
@@ -10,9 +12,12 @@ import pl.coderslab.Dao.PublisherDao;
 import pl.coderslab.Entity.Author;
 import pl.coderslab.Entity.Book;
 import pl.coderslab.Entity.Publisher;
+import pl.coderslab.Validation.BookGroupValidation;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
+import javax.validation.groups.Default;
 import java.util.List;
 import java.util.Random;
 
@@ -35,7 +40,7 @@ public class BookController
         return "/books/all";
     }
 
-    @GetMapping("/books/create") // dzien2/czesc2
+    @GetMapping("/books/create")
     public String book(HttpServletRequest request)
     {
         request.setAttribute("newBook", new Book());
@@ -55,14 +60,14 @@ public class BookController
     }
 
     @PostMapping("/books/create")
-    public String saveBook(Book book)
+    public String saveBook(@ModelAttribute("newBook") @Validated({BookGroupValidation.class}) Book book, BindingResult bindingResult)
     {
-        System.out.println(book.toString());
+        if (bindingResult.hasErrors())
+        {
+            return "books/create";
+        }
 
         bookDao.saveBook(book);
-        System.out.println("id: " + book.getId());
-
-        // return "redirect:/books/" + book.getId();
         return "redirect:/books";
     }
 
@@ -89,22 +94,6 @@ public class BookController
         return "/books/del-confirm";
     }
 
-    @RequestMapping("/books/add")
-    @ResponseBody
-    public String add()
-    {
-        Random generator = new Random();
-
-        Book book = new Book();
-        book.setTitle("Nowa ksiaza" + generator.nextInt(100000) + 1);
-        //book.setAuthors(authorDao.findById(1L));
-        book.setPublisher(publisherDao.findById(1L));
-        book.setDescription("Super ksiazka");
-        book.setRating(5.5);
-
-        bookDao.saveBook(book);
-        return "Dodano:\n" + book.toString();
-    }
 
     @GetMapping("/books/edit/{id}")
     public String update(@PathVariable Long id, Model model)
@@ -114,8 +103,12 @@ public class BookController
     }
 
     @PostMapping("/books/edit/{id}")
-    public String postUpdate(@ModelAttribute Book book)
+    public String postUpdate(@ModelAttribute("newBook") @Valid Book book, BindingResult bindingResult)
     {
+        if (bindingResult.hasErrors())
+        {
+            return "/books/create";
+        }
         bookDao.updateBook(book);
         return "redirect:/books";
     }

@@ -94,16 +94,5 @@ public class PersonDetails
         this.person = person;
     }
 
-    @Override
-    public String toString()
-    {
-        return "PersonDetails{" +
-                "id=" + id +
-                ", firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                ", streetNumber=" + streetNumber +
-                ", street='" + street + '\'' +
-                ", city='" + city + '\'' +
-                '}';
-    }
+
 }
