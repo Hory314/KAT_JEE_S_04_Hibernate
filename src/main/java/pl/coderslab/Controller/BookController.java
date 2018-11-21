@@ -12,14 +12,12 @@ import pl.coderslab.Dao.PublisherDao;
 import pl.coderslab.Entity.Author;
 import pl.coderslab.Entity.Book;
 import pl.coderslab.Entity.Publisher;
-import pl.coderslab.Validation.BookGroupValidation;
+import pl.coderslab.Validation.BookValidationGroup;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import javax.validation.groups.Default;
 import java.util.List;
-import java.util.Random;
 
 @Controller
 public class BookController
@@ -60,7 +58,7 @@ public class BookController
     }
 
     @PostMapping("/books/create")
-    public String saveBook(@ModelAttribute("newBook") @Validated({BookGroupValidation.class}) Book book, BindingResult bindingResult)
+    public String saveBook(@ModelAttribute("newBook") @Validated({BookValidationGroup.class}) Book book, BindingResult bindingResult)
     {
         if (bindingResult.hasErrors())
         {
@@ -103,7 +101,7 @@ public class BookController
     }
 
     @PostMapping("/books/edit/{id}")
-    public String postUpdate(@ModelAttribute("newBook") @Valid Book book, BindingResult bindingResult)
+    public String postUpdate(@ModelAttribute("newBook") @Validated({BookValidationGroup.class}) Book book, BindingResult bindingResult)
     {
         if (bindingResult.hasErrors())
         {

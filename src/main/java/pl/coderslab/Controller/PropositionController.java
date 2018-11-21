@@ -15,9 +15,10 @@ import pl.coderslab.Dao.PublisherDao;
 import pl.coderslab.Entity.Author;
 import pl.coderslab.Entity.Book;
 import pl.coderslab.Entity.Publisher;
+import pl.coderslab.Validation.BookValidationGroup;
+import pl.coderslab.Validation.PropositionValidationGroup;
 
 import javax.validation.Valid;
-import javax.validation.groups.Default;
 import java.util.List;
 
 @Controller
@@ -58,19 +59,19 @@ public class PropositionController
     public String create(Model model)
     {
         Book book = new Book();
-        book.setProposition(true);
+
         model.addAttribute("newProposition", book);
         return "/propositions/create";
     }
 
     @PostMapping("/create")
-    public String postCreate(@ModelAttribute("newProposition") @Validated({Default.class}) Book book, BindingResult bindingResult)
+    public String postCreate(@ModelAttribute("newProposition") @Validated({PropositionValidationGroup.class}) Book book, BindingResult bindingResult)
     {
         if (bindingResult.hasErrors())
         {
             return "/propositions/create";
         }
-
+        book.setProposition(true); // ustawianie true (bo nie ma hiddena)
         bookDao.saveBook(book);
         return "redirect:/propositions";
     }

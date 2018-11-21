@@ -1,7 +1,8 @@
 package pl.coderslab.Entity;
 
 import org.hibernate.validator.constraints.NotEmpty;
-import pl.coderslab.Validation.BookGroupValidation;
+import pl.coderslab.Validation.BookValidationGroup;
+import pl.coderslab.Validation.PropositionValidationGroup;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
@@ -18,35 +19,34 @@ public class Book
     private Long id;
 
     @Column(nullable = false, unique = true)
-    @Size(min = 5, groups = BookGroupValidation.class)
-    @NotNull(groups = Default.class)
-    @NotEmpty(groups = Default.class)
+    @Size(min = 5, message = "Tytuł musi zawierać co najmniej 5 znaków", groups = {PropositionValidationGroup.class, BookValidationGroup.class})
+    @NotNull(message = "Tytuł nie może być pusty", groups = {PropositionValidationGroup.class, BookValidationGroup.class})
+    @NotEmpty(message = "Wpisz tytuł", groups = {PropositionValidationGroup.class, BookValidationGroup.class})
     private String title;
 
     @ManyToMany(fetch = FetchType.EAGER)
-    @NotNull(groups = BookGroupValidation.class)
-    @Size(min = 1, groups = BookGroupValidation.class)
+    @NotNull(message = "Autorzy nie mogą być puści", groups = {BookValidationGroup.class})
+    @Size(min = 1, message = "Musisz wybrać co najmniej jednego autora", groups = BookValidationGroup.class)
     private List<Author> authors;
 
-    @NotNull(groups = BookGroupValidation.class)
+    @NotNull(message = "Musisz wybrać wydawnictwo", groups = BookValidationGroup.class)
     @ManyToOne
     private Publisher publisher;
 
     @Column(columnDefinition = "TEXT")
-    @Size(max = 600, groups = BookGroupValidation.class)
-    @NotNull(groups = Default.class)
-    @NotEmpty(groups = Default.class)
+    @Size(max = 600, message = "Opis nie może zawierać więcej niż 600 znaków", groups = {PropositionValidationGroup.class, BookValidationGroup.class})
+    @NotEmpty(message = "Wpisz opis", groups = {PropositionValidationGroup.class, BookValidationGroup.class})
     private String description;
 
     @Column(scale = 2, precision = 4)
-    @Min(value = 1, groups = BookGroupValidation.class)
-    @Max(value = 10, groups = BookGroupValidation.class)
+    @Min(value = 1, message = "Ocena musi być w skali od 1 do 10", groups = {BookValidationGroup.class, PropositionValidationGroup.class})
+    @Max(value = 10, message = "Ocena musi być w skali od 1 do 10", groups = {BookValidationGroup.class, PropositionValidationGroup.class})
     private Double rating;
 
-    @Min(value = 2, message = "Książka musi mieć przynajmniej 2 strony", groups = BookGroupValidation.class)
+    @Min(value = 2, message = "Książka musi mieć przynajmniej 2 strony", groups = {BookValidationGroup.class, PropositionValidationGroup.class})
     private Integer pages;
 
-    @Null(groups = BookGroupValidation.class)
+    @AssertTrue(groups = PropositionValidationGroup.class) // musi byc true dla Proposition
     private Boolean proposition;
 
     public Book()
