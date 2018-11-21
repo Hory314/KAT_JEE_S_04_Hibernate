@@ -1,6 +1,10 @@
 package pl.coderslab.Entity;
 
 import javax.persistence.*;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.List;
 
 @Entity
@@ -11,15 +15,24 @@ public class Book
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(nullable = false, unique = true)
+    @Size(min = 5)
     private String title;
     @ManyToMany(fetch = FetchType.EAGER)
+    @NotNull
+    @Size(min = 1)
     private List<Author> authors;
     @ManyToOne
+    @NotNull
     private Publisher publisher;
     @Column(columnDefinition = "TEXT")
+    @Size(max = 600)
     private String description;
     @Column(scale = 2, precision = 4)
+    @Min(1)
+    @Max(10)
     private Double rating;
+    @Min(value = 2, message = "Książka musi mieć przynajmniej 2 strony")
+    private Integer pages;
 
     public Book()
     {
@@ -85,15 +98,27 @@ public class Book
         this.rating = rating;
     }
 
+    public Integer getPages()
+    {
+        return pages;
+    }
+
+    public void setPages(Integer pages)
+    {
+        this.pages = pages;
+    }
+
     @Override
     public String toString()
     {
         return "Book{" +
                 "id=" + id +
                 ", title='" + title + '\'' +
+                ", authors=" + authors +
                 ", publisher=" + publisher +
                 ", description='" + description + '\'' +
                 ", rating=" + rating +
+                ", pages=" + pages +
                 '}';
     }
 }

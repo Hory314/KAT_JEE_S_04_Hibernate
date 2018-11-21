@@ -8,6 +8,8 @@
 <body>
 <form:form method="post" modelAttribute="newPublisher">
     <form:input path="name" placeholder="Podaj nazwę"/>
+    <form:input path="nip" placeholder="Podaj NIP"/>
+    <form:input path="regon" placeholder="Podaj REGON"/>
     <input type="submit">
 </form:form>
 </body>

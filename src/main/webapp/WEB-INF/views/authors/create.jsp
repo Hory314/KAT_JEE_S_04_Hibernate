@@ -9,6 +9,8 @@
 <form:form method="post" modelAttribute="newAuthor">
     <form:input path="firstName" placeholder="Podaj imię"/>
     <form:input path="lastName" placeholder="Podaj nazwisko"/>
+    <form:input path="pesel" placeholder="Podaj PESEL"/>
+    <form:input path="email" placeholder="Podaj E-mail"/>
     <input type="submit">
 </form:form>
 </body>

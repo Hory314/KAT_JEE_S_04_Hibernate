@@ -26,14 +26,14 @@ public class PublisherController
     }
 
 
-    @GetMapping("/publishers/create") // dzien2/czesc2
-    public String publishers(HttpServletRequest request)
+    @GetMapping("/create") // dzien2/czesc2
+    public String publishers(Model model)
     {
-        request.setAttribute("newPublishers", new Publisher());
+        model.addAttribute("newPublisher", new Publisher());
         return "/publishers/create";
     }
 
-    @PostMapping("/publishers/create")
+    @PostMapping("/create")
     public String savePublishers(@ModelAttribute Publisher publishers)
     {
         publisherDao.savePublisher(publishers);
