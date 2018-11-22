@@ -2,6 +2,7 @@ package pl.coderslab.Dao;
 
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import pl.coderslab.Dao.Interfaces.BookDao;
 import pl.coderslab.Entity.Book;
 
 import javax.persistence.EntityManager;
@@ -11,36 +12,42 @@ import java.util.List;
 
 @Component
 @Transactional
-public class BookDao
+public class BookDaoImpl implements BookDao
 {
     @PersistenceContext // wstrzyknięcie entityManagera
     private EntityManager entityManager;
 
-    public void saveBook(Book entity)
-    {
-        entityManager.persist(entity);
-    }
-
-    public void updateBook(Book entity)
-    {
-        entityManager.merge(entity);
-    }
-
-    public Book findById(Long id)
-    {
-        return entityManager.find(Book.class, id);
-    }
-
-    public void delete(Book entity)
-    {
-        entityManager.remove(entityManager.contains(entity) ? entity : entityManager.merge(entity));
-    }
-
-    public List<Book> findAll()
-    {
-        Query query = entityManager.createQuery("SELECT b FROM Book b");
-        return query.getResultList();
-    }
+//    @Override
+//    public void saveBook(Book entity)
+//    {
+//        entityManager.persist(entity);
+//    }
+//
+//    @Override
+//
+//    public void updateBook(Book entity)
+//    {
+//        entityManager.merge(entity);
+//    }
+//
+//    @Override
+//
+//    public Book findById(Long id)
+//    {
+//        return entityManager.find(Book.class, id);
+//    }
+//
+//        @Override
+//    public void delete(Book entity)
+//    {
+//        entityManager.remove(entityManager.contains(entity) ? entity : entityManager.merge(entity));
+//    }
+//    @Override
+//    public List<Book> findAll()
+//    {
+//        Query query = entityManager.createQuery("SELECT b FROM Book b");
+//        return query.getResultList();
+//    }
 
     public List<Book> getRatingList(int rating)
     {
@@ -53,7 +60,7 @@ public class BookDao
     public List<Book> findAllPropositions()
     {
         Query query = entityManager.createQuery("SELECT b FROM Book b WHERE proposition = ?1");
-        query.setParameter(1,true); // o: 1 = true (w bazie tinyint)
+        query.setParameter(1, true); // o: 1 = true (w bazie tinyint)
         return query.getResultList();
     }
 
