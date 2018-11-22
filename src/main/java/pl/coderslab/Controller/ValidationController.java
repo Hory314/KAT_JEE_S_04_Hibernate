@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import pl.coderslab.Entity.Book;
+import pl.coderslab.Validation.BookValidationGroup;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Path;
@@ -30,7 +31,7 @@ public class ValidationController
         book.setTitle("a");
         book.setPages(1);
 
-        Set<ConstraintViolation<Book>> errors = validator.validate(book);
+        Set<ConstraintViolation<Book>> errors = validator.validate(book, BookValidationGroup.class);
 
         if (!errors.isEmpty())
         {

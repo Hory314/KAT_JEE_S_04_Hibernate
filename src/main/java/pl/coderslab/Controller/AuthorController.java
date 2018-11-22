@@ -7,6 +7,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import pl.coderslab.Dao.AuthorDao;
 import pl.coderslab.Entity.Author;
+import pl.coderslab.Repositories.AuthorRepository;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -16,6 +17,8 @@ public class AuthorController
 {
     @Autowired
     private AuthorDao authorDao;
+    @Autowired
+    AuthorRepository authorRepository;
 
     // SHOW ALL
     @RequestMapping("/authors")
@@ -74,5 +77,31 @@ public class AuthorController
     {
         authorDao.updateAuthor(author);
         return "redirect:/authors";
+    }
+
+    // dzien 4
+    // 5
+    @GetMapping("/authors/email/{email}")
+    public String getFirstByEmail(@PathVariable String email, Model model)
+    {
+
+        model.addAttribute("authors", authorRepository.findFirstAuthorByEmail(email));
+        return "/authors/all";
+    }
+
+    @GetMapping("/authors/pesel/{pesel}")
+    public String getFirstByPesel(@PathVariable String pesel, Model model)
+    {
+
+        model.addAttribute("authors", authorRepository.findFirstAuthorByPesel(pesel));
+        return "/authors/all";
+    }
+
+    @GetMapping("/authors/name/{lastName}")
+    public String getByLastName(@PathVariable String lastName, Model model)
+    {
+
+        model.addAttribute("authors", authorRepository.findAuthorsByLastName(lastName));
+        return "/authors/all";
     }
 }

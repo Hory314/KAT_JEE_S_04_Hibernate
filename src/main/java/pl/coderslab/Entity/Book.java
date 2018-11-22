@@ -47,10 +47,26 @@ public class Book
     private Integer pages;
 
     @AssertTrue(groups = PropositionValidationGroup.class) // musi byc true dla Proposition
+    @Column(columnDefinition = "TINYINT(1)")
     private Boolean proposition;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @NotNull(message = "Musisz wybrać kategorię", groups = BookValidationGroup.class)
+    private Category category;
+
 
     public Book()
     {
+    }
+
+    public Category getCategory()
+    {
+        return category;
+    }
+
+    public void setCategory(Category category)
+    {
+        this.category = category;
     }
 
     public Boolean getProposition()

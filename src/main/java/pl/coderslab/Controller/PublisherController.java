@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import pl.coderslab.Dao.PublisherDao;
 
 import pl.coderslab.Entity.Publisher;
+import pl.coderslab.Repositories.PublisherRepository;
 
 import javax.naming.Binding;
 import javax.servlet.http.HttpServletRequest;
@@ -21,6 +22,9 @@ public class PublisherController
 {
     @Autowired
     private PublisherDao publisherDao;
+
+    @Autowired
+    PublisherRepository publisherRepository;
 
     @RequestMapping
     public String showPublishers(Model model)
@@ -84,4 +88,20 @@ public class PublisherController
         return "redirect:/publishers";
     }
 
+    /// dzień 4
+    // 4
+
+    @GetMapping("/nip/{nip}")
+    public String getByNip(@PathVariable String nip, Model model)
+    {
+        model.addAttribute("publishers", publisherRepository.findFirstByNip(nip));
+        return "/publishers/all";
+    }
+
+    @GetMapping("/regon/{regon}")
+    public String getByRegon(@PathVariable String regon, Model model)
+    {
+        model.addAttribute("publishers", publisherRepository.findFirstByRegon(regon));
+        return "/publishers/all";
+    }
 }

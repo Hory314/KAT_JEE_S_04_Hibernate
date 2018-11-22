@@ -4,6 +4,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.convert.converter.Converter;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.format.FormatterRegistry;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalEntityManagerFactoryBean;
@@ -17,6 +18,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import pl.coderslab.Converters.AuthorConverter;
+import pl.coderslab.Converters.CategoryConverter;
 import pl.coderslab.Converters.PublisherConverter;
 
 import javax.persistence.EntityManagerFactory;
@@ -27,6 +29,7 @@ import java.util.Locale;
 @EnableWebMvc
 @ComponentScan(basePackages = "pl.coderslab")
 @EnableTransactionManagement
+@EnableJpaRepositories(basePackages = "pl.coderslab.Repositories")
 public class AppConfig extends WebMvcConfigurerAdapter
 {
     @Override
@@ -40,6 +43,7 @@ public class AppConfig extends WebMvcConfigurerAdapter
     {
         registry.addConverter(puslisherConverter());
         registry.addConverter(authorConverter());
+        registry.addConverter(categoryConverter());
     }
 
     @Bean
@@ -51,8 +55,8 @@ public class AppConfig extends WebMvcConfigurerAdapter
         return viewResolver;
     }
 
-    @Bean
-    public LocalEntityManagerFactoryBean entityManagerFactoryBean()
+    @Bean//(name = "entityManagerFactory") // albo tu doklanie taki name albo metoda musi sie tak nazywac
+    public LocalEntityManagerFactoryBean entityManagerFactory()
     {
         LocalEntityManagerFactoryBean emf = new LocalEntityManagerFactoryBean();
         emf.setPersistenceUnitName("dbUnit");
@@ -75,6 +79,12 @@ public class AppConfig extends WebMvcConfigurerAdapter
     public Converter authorConverter()
     {
         return new AuthorConverter();
+    }
+
+    @Bean
+    public Converter categoryConverter()
+    {
+        return new CategoryConverter();
     }
 
     @Bean

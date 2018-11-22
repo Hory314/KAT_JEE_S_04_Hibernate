@@ -2,6 +2,7 @@ package pl.coderslab.Controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.stereotype.Repository;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -11,15 +12,17 @@ import pl.coderslab.Dao.BookDao;
 import pl.coderslab.Dao.PublisherDao;
 import pl.coderslab.Entity.Author;
 import pl.coderslab.Entity.Book;
+import pl.coderslab.Entity.Category;
 import pl.coderslab.Entity.Publisher;
+import pl.coderslab.Repositories.BookRepository;
+import pl.coderslab.Repositories.CategoryRepository;
 import pl.coderslab.Validation.BookValidationGroup;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
-import javax.validation.groups.Default;
 import java.util.List;
 
 @Controller
+@Repository
 public class BookController
 {
     @Autowired
@@ -30,6 +33,12 @@ public class BookController
 
     @Autowired
     private AuthorDao authorDao;
+
+    @Autowired
+    BookRepository bookRepository;
+
+    @Autowired
+    CategoryRepository categoryRepository;
 
     @GetMapping("/books")
     public String listOfBooks(Model model)
@@ -57,6 +66,12 @@ public class BookController
         return authorDao.findAll();
     }
 
+    @ModelAttribute("categories")
+    public List<Category> categories()
+    {
+        return categoryRepository.findAll();
+    }
+
     @PostMapping("/books/create")
     public String saveBook(@ModelAttribute("newBook") @Validated({BookValidationGroup.class}) Book book, BindingResult bindingResult)
     {
@@ -65,7 +80,8 @@ public class BookController
             return "books/create";
         }
 
-        bookDao.saveBook(book);
+        // bookDao.saveBook(book); //myDao
+        bookRepository.save(book);//SpringData
         return "redirect:/books";
     }
 
@@ -110,4 +126,57 @@ public class BookController
         bookDao.updateBook(book);
         return "redirect:/books";
     }
+
+    //////// DZIEN 4 //////////////
+
+
+    //1,2
+    @GetMapping("/books/categories")
+    public String getCategoriesList(Model model)
+    {
+        List<Category> allCategories = categoryRepository.findAll();
+        model.addAttribute("categories", allCategories);
+        return "/books/categories";
+    }
+
+    @GetMapping("/books/categories/{id:[0-9]+}")
+    public String getByCategory(@PathVariable Long id, Model model)
+    {
+        Category category = categoryRepository.findOne(id);
+        List<Book> books = bookRepository.findBooksByCategory(category);
+        model.addAttribute("books", books);
+        return "/books/all";
+    }
+
+    // 3
+    @GetMapping("/books/author/{name}")
+    public String getByAuthorName(@PathVariable String name, Model model)
+    {
+        model.addAttribute("books", bookRepository.findBooksByAuthorsLastNameOrAuthorsFirstName(name, name));
+        return "/books/all";
+    }
+
+    @GetMapping("/books/publisher/{name}")
+    public String getByPublisherName(@PathVariable String name, Model model)
+    {
+        model.addAttribute("books", bookRepository.findBooksByPublisherName(name));
+        return "/books/all";
+    }
+
+    @GetMapping("/books/rating/{min:[0-9]*\\.*[0-9]+}/{max:[0-9]*\\.*[0-9]+}")
+    public String getByPublisherName(@PathVariable Double min, @PathVariable Double max, Model model)
+    {
+        model.addAttribute("books", bookRepository.findBooksByRatingBetween(min, max));
+        return "/books/all";
+    }
+
+    @GetMapping("/books/category/{name}")
+    public String getFirstByPublisherName(@PathVariable String name, Model model)
+    {
+
+        model.addAttribute("books", bookRepository.findFirstByCategoryNameOrderByCategoryNameAsc(name));
+        return "/books/all";
+    }
+
+
 }

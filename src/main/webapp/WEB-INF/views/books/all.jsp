@@ -12,6 +12,7 @@
         <th>Wydawca</th>
         <th>Autorzy</th>
         <th>Ocena</th>
+        <th>Kategoria</th>
         <th>Operacje</th>
     </tr>
     <c:forEach items="${books}" var="book">
@@ -27,6 +28,7 @@
                 </ul>
             </td>
             <td>${book.rating}</td>
+            <td>${book.category != null ? book.category.name : "-"}</td>
             <td><a href="/books/edit/${book.id}">Edytuj</a> | <a href="/books/delete/confirm/${book.id}">Usuń</a></td>
         </tr>
     </c:forEach>

@@ -56,4 +56,5 @@ public class BookDao
         query.setParameter(1,true); // o: 1 = true (w bazie tinyint)
         return query.getResultList();
     }
+
 }

@@ -16,6 +16,7 @@
     <form:input path="rating" placeholder="Podaj ocenę"/>
     <form:select items="${publishers}" path="publisher" itemLabel="name" itemValue="id"/>
     <form:select items="${authors}" path="authors" itemLabel="fullName" itemValue="id" multiple="true"/>
+    <form:select items="${categories}" path="category" itemLabel="name" itemValue="id"/>
     <input type="submit">
 </form:form>
 </body>
