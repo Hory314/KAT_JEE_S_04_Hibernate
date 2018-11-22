@@ -10,15 +10,14 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import pl.coderslab.Dao.AuthorDao;
-import pl.coderslab.Dao.BookDao;
+import pl.coderslab.Dao.BookRepositoryImpl;
 import pl.coderslab.Dao.PublisherDao;
 import pl.coderslab.Entity.Author;
 import pl.coderslab.Entity.Book;
 import pl.coderslab.Entity.Publisher;
-import pl.coderslab.Validation.BookValidationGroup;
+import pl.coderslab.Repositories.BookRepository;
 import pl.coderslab.Validation.PropositionValidationGroup;
 
-import javax.validation.Valid;
 import java.util.List;
 
 @Controller
@@ -26,7 +25,7 @@ import java.util.List;
 public class PropositionController
 {
     @Autowired
-    private BookDao bookDao;
+    BookRepository bookRepository;
 
     @Autowired
     private PublisherDao publisherDao;
@@ -50,7 +49,7 @@ public class PropositionController
     @RequestMapping
     public String showAllPropositions(Model model)
     {
-        model.addAttribute("books", bookDao.findAllPropositions());
+        model.addAttribute("books", bookRepository.findAllPropositions());
         return "/books/all"; // korzystam z tego samego widoku
     }
 
@@ -72,7 +71,7 @@ public class PropositionController
             return "/propositions/create";
         }
         book.setProposition(true); // ustawianie true (bo nie ma hiddena)
-        bookDao.saveBook(book);
+        bookRepository.saveBook(book);
         return "redirect:/propositions";
     }
     // UPDATE

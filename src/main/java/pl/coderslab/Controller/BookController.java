@@ -8,7 +8,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import pl.coderslab.Dao.AuthorDao;
-import pl.coderslab.Dao.BookDao;
 import pl.coderslab.Dao.PublisherDao;
 import pl.coderslab.Entity.Author;
 import pl.coderslab.Entity.Book;
@@ -26,7 +25,7 @@ import java.util.List;
 public class BookController
 {
     @Autowired
-    private BookDao bookDao;
+    private BookRepository bookRepository;
 
     @Autowired
     private PublisherDao publisherDao;
@@ -34,8 +33,6 @@ public class BookController
     @Autowired
     private AuthorDao authorDao;
 
-    @Autowired
-    BookRepository bookRepository;
 
     @Autowired
     CategoryRepository categoryRepository;
@@ -43,7 +40,7 @@ public class BookController
     @GetMapping("/books")
     public String listOfBooks(Model model)
     {
-        model.addAttribute("books", bookDao.findAll());
+        model.addAttribute("books", bookRepository.findAll());
         return "/books/all";
     }
 
@@ -80,7 +77,7 @@ public class BookController
             return "books/create";
         }
 
-        // bookDao.saveBook(book); //myDao
+        // bookRepository.saveBook(book); //myDao
         bookRepository.save(book);//SpringData
         return "redirect:/books";
     }
@@ -90,14 +87,14 @@ public class BookController
     @ResponseBody
     public String getById(@PathVariable Long id)
     {
-        return bookDao.findById(id).toString();
+        return bookRepository.findById(id).toString();
     }
 
     @RequestMapping("/books/delete/{id}")
     public String delete(@PathVariable Long id)
     {
-        Book bookToDel = bookDao.findById(id);
-        bookDao.delete(bookToDel);
+        Book bookToDel = bookRepository.findById(id);
+        bookRepository.deleteBook(bookToDel);
         return "redirect:/books";
     }
 
@@ -112,7 +109,7 @@ public class BookController
     @GetMapping("/books/edit/{id}")
     public String update(@PathVariable Long id, Model model)
     {
-        model.addAttribute("newBook", bookDao.findById(id));
+        model.addAttribute("newBook", bookRepository.findById(id));
         return "/books/create";
     }
 
@@ -123,7 +120,7 @@ public class BookController
         {
             return "/books/create";
         }
-        bookDao.updateBook(book);
+        bookRepository.updateBook(book);
         return "redirect:/books";
     }
 
@@ -159,24 +156,33 @@ public class BookController
     @GetMapping("/books/publisher/{name}")
     public String getByPublisherName(@PathVariable String name, Model model)
     {
-        model.addAttribute("books", bookRepository.findBooksByPublisherName(name));
+//        model.addAttribute("books", bookRepository.findBooksByPublisherName(name));
+        model.addAttribute("books", bookRepository.getPublishersBooks(name));
         return "/books/all";
     }
 
     @GetMapping("/books/rating/{min:[0-9]*\\.*[0-9]+}/{max:[0-9]*\\.*[0-9]+}")
-    public String getByPublisherName(@PathVariable Double min, @PathVariable Double max, Model model)
+    public String getByRating(@PathVariable Double min, @PathVariable Double max, Model model)
     {
-        model.addAttribute("books", bookRepository.findBooksByRatingBetween(min, max));
+        //  model.addAttribute("books", bookRepository.findBooksByRatingBetween(min, max));
+        model.addAttribute("books", bookRepository.getRatingBetween(min, max));
         return "/books/all";
     }
 
     @GetMapping("/books/category/{name}")
-    public String getFirstByPublisherName(@PathVariable String name, Model model)
+    public String getFirstByCategoryName(@PathVariable String name, Model model)
     {
 
-        model.addAttribute("books", bookRepository.findFirstByCategoryNameOrderByCategoryNameAsc(name));
+//        model.addAttribute("books", bookRepository.findFirstByCategoryNameOrderByTitleAsc(name));
+        model.addAttribute("books", bookRepository.getOneByCategory(name));
         return "/books/all";
     }
 
-
+    // RESET RATING//
+    @GetMapping("/books/admin/reset_ratings/{rating:[0-9]*\\.*[0-9]+}")
+    public String resetRatings(@PathVariable Double rating)
+    {
+        bookRepository.resetRating(rating);
+        return "redirect:/books";
+    }
 }

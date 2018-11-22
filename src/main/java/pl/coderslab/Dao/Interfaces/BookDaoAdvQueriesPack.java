@@ -1,5 +1,6 @@
 package pl.coderslab.Dao.Interfaces;
 
-public interface BookDaoMoreQueries
+public interface BookDaoAdvQueriesPack
 {
+    void resetRating(Double rating);
 }

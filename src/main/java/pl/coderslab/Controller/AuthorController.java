@@ -104,4 +104,20 @@ public class AuthorController
         model.addAttribute("authors", authorRepository.findAuthorsByLastName(lastName));
         return "/authors/all";
     }
+
+    @GetMapping("/authors/pesel90")
+    public String getByPeselStart(Model model)
+    {
+
+        model.addAttribute("authors", authorRepository.getByPeselStartingWith90());
+        return "/authors/all";
+    }
+
+    @GetMapping("/authors/emailStart/{emailFragment}")
+    public String getByEmailStart(@PathVariable String emailFragment, Model model)
+    {
+
+        model.addAttribute("authors", authorRepository.getByEmailStartingWith(emailFragment));
+        return "/authors/all";
+    }
 }
